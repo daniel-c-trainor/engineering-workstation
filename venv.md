@@ -1,0 +1,1 @@
+source /c/dev/.venvs/workstation/Scripts/activate
