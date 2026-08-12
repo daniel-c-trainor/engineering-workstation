@@ -2,7 +2,7 @@
 name = "engineering-workstation"
 version = "0.1.0"
 description = "Personal engineering workstation environment"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 
 # Modern dependency management
 dependencies = [
