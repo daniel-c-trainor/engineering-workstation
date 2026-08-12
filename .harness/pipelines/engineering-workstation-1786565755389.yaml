@@ -57,6 +57,10 @@ pipeline:
                         -F "organization=$SONAR_ORG_KEY" \
                         -F "coverageReport=@coverage.xml" \
                         https://sonarcloud.io/api/coverage/upload
+                    envVariables:
+                      SONAR_TOKEN: <+secrets.getValue("SONAR_TOKEN")>
+                      SONAR_PROJECT_KEY: <+secrets.getValue("SONAR_PROJECT_KEY")>
+                      SONAR_ORG_KEY: <+secrets.getValue("SONAR_ORG_KEY")>
               - step:
                   type: Run
                   name: Check SonarCloud Quality Gate
@@ -79,7 +83,9 @@ pipeline:
             arch: Amd64
           runtime:
             type: Cloud
-            spec: {}
+            spec:
+              imageSpec:
+                imageName: python:3.12-slim
         description: ""
   properties:
     ci:
