@@ -19,12 +19,68 @@ pipeline:
                   spec:
                     shell: Sh
                     command: echo "Welcome to Harness CI"
+              - step:
+                  type: Run
+                  name: Install Python Dependencies
+                  identifier: Install_Python_Dependencies
+                  spec:
+                    shell: Sh
+                    command: |-
+                      python3 -m pip install --upgrade pip
+                      pip install -e .
+                      pip install pytest pytest-cov
+                      pip install ruff
+              - step:
+                  type: Run
+                  name: Ruff Lint
+                  identifier: Ruff_Lint
+                  spec:
+                    shell: Sh
+                    command: ruff check .
+              - step:
+                  type: Run
+                  name: Run Tests and Coverage
+                  identifier: Run_Tests_and_Coverage
+                  spec:
+                    shell: Sh
+                    command: pytest --cov=src --cov-report=xml
+              - step:
+                  type: Run
+                  name: Upload Coverage to SonarCloud
+                  identifier: Upload_Coverage_to_SonarCloud
+                  spec:
+                    shell: Sh
+                    command: |-
+                      curl -u "$SONAR_TOKEN:" \
+                        -X POST \
+                        -F "projectKey=$SONAR_PROJECT_KEY" \
+                        -F "organization=$SONAR_ORG_KEY" \
+                        -F "coverageReport=@coverage.xml" \
+                        https://sonarcloud.io/api/coverage/upload
+              - step:
+                  type: Run
+                  name: Check SonarCloud Quality Gate
+                  identifier: Check_SonarCloud_Quality_Gate
+                  spec:
+                    shell: Sh
+                    command: |-
+                      STATUS=$(curl -u "$SONAR_TOKEN:" \
+                        "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" \
+                        | jq -r '.projectStatus.status')
+
+                      if [ "$STATUS" != "OK" ]; then
+                        echo "Quality Gate Failed: $STATUS"
+                        exit 1
+                      fi
+
+                      echo "Quality Gate Passed"
           platform:
             os: Linux
             arch: Amd64
           runtime:
             type: Cloud
             spec: {}
+        description: ""
   properties:
     ci:
       codebase:
