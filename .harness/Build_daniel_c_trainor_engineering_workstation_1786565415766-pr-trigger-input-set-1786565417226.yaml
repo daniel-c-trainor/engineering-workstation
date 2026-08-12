@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_daniel_c_trainor_engineering_workstation_1786565415766-pr-trigger-input-set
+  identifier: Build_daniel_c_trainor_engineering_workstation_1786565415766prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: Engineering_Workstation_CI
+  pipeline:
+    identifier: Build_daniel_c_trainor_engineering_workstation_1786565415766
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
