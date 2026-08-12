@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_daniel_c_trainor_engineering_workstation_1786565840099-push-trigger-input-set
+  identifier: Build_daniel_c_trainor_engineering_workstation_1786565840099pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: Engineering_Workstation_CI
+  pipeline:
+    identifier: Build_daniel_c_trainor_engineering_workstation_1786565840099
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
