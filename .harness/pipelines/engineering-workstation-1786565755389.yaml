@@ -85,7 +85,8 @@ pipeline:
             type: Cloud
             spec:
               imageSpec:
-                imageName: python:3.12-slim
+                imageName: harness/ci-python:3.12
+                connectorRef: account.harnessImage
         description: ""
   properties:
     ci:
