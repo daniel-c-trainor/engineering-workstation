@@ -1,0 +1,15 @@
+[project]
+name = "engineering-workstation"
+version = "0.1.0"
+description = "Personal engineering workstation environment"
+requires-python = ">=3.12"
+
+# Modern dependency management
+dependencies = [
+    "ruff==0.6.4",
+    "pre-commit",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
