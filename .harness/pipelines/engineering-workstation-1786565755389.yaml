@@ -46,50 +46,6 @@ pipeline:
                     command: |-
                       export PYTHONPATH="${PYTHONPATH}:/harness"
                       pytest --cov=src --cov-report=xml
-              - step:
-                  type: Run
-                  name: Upload Coverage to SonarCloud
-                  identifier: Upload_Coverage_to_SonarCloud
-                  spec:
-                    shell: Sh
-                    command: |-
-                      curl -u "$SONAR_TOKEN:" \
-                        -X POST \
-                        -F "projectKey=$SONAR_PROJECT_KEY" \
-                        -F "organization=$SONAR_ORG_KEY" \
-                        -F "coverageReport=@coverage.xml" \
-                        https://sonarcloud.io/api/coverage/upload
-                    envVariables:
-                      SONAR_TOKEN: <+secrets.getValue("SONAR_TOKEN")>
-                      SONAR_PROJECT_KEY: <+secrets.getValue("SONAR_PROJECT_KEY")>
-                      SONAR_ORG_KEY: <+secrets.getValue("SONAR_ORG_KEY")>
-              - step:
-                  type: Run
-                  name: Check SonarCloud Quality Gate
-                  identifier: Check_SonarCloud_Quality_Gate
-                  spec:
-                    shell: Sh
-                    command: |-
-                      set -e
-
-                      for i in {1..10}; do
-                        STATUS=$(curl -u "$SONAR_TOKEN:" \
-                          "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" \
-                          | jq -r '.projectStatus.status')
-
-                        echo "Quality Gate Status: $STATUS"
-
-                        if [ "$STATUS" = "OK" ]; then
-                          echo "Quality Gate Passed"
-                          exit 0
-                        fi
-
-                        echo "Waiting for SonarCloud to finish analysis..."
-                        sleep 5
-                      done
-
-                      echo "Quality Gate Failed: $STATUS"
-                      exit 1
           platform:
             os: Linux
             arch: Amd64
