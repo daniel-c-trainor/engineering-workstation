@@ -43,7 +43,9 @@ pipeline:
                   identifier: Run_Tests_and_Coverage
                   spec:
                     shell: Sh
-                    command: pytest --cov=src --cov-report=xml
+                    command: |-
+                      export PYTHONPATH="${PYTHONPATH}:/harness"
+                      pytest --cov=src --cov-report=xml
               - step:
                   type: Run
                   name: Upload Coverage to SonarCloud
